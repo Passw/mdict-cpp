@@ -26,6 +26,6 @@ jobs:
         git branch -vv
     - name: RUN `git pull master -r`
       run: |
-        git remote add up https://github.com/rendello/lsh_fork.git
+        git remote add up https://github.com/dictlab/mdict-cpp.git
         git pull up master -r
         git push origin HEAD:master --force
