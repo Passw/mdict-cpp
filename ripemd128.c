@@ -205,13 +205,13 @@ void ripemd128compress(dword32 *digest, dword32 *X)
 
 /********************************************************************/
 
-int ripemd128PaddingISO7816(uint8_t **data, int data_len) {
+int ripemd128PaddingISO7816(u_int8_t **data, int data_len) {
   // padding ISO7816
   // message += 0x80 += 0x00 * length
   int padding_length = ((data_len % 64) < 56 ? 56 : 120) - data_len % 64;
   //printf("paddinglength: %d\n", padding_length);
 
-  uint8_t* padding = (uint8_t *) calloc((size_t) (padding_length), sizeof(uint8_t));
+  u_int8_t* padding = (u_int8_t *) calloc((size_t) (padding_length), sizeof(u_int8_t));
   padding[0] = 0x80; // 0x80
 
 //	printf("padding:");
@@ -220,29 +220,29 @@ int ripemd128PaddingISO7816(uint8_t **data, int data_len) {
 //	printf("\n");
 
   // 1 byte for 0x80
-  uint8_t * new_data = (uint8_t *) calloc((size_t) (padding_length + data_len), sizeof(uint8_t));
+  u_int8_t * new_data = (u_int8_t *) calloc((size_t) (padding_length + data_len), sizeof(u_int8_t));
   // concat data and padding
   memcpy(new_data, *data, data_len);
-  memcpy(new_data + data_len * sizeof(uint8_t), padding, padding_length);
+  memcpy(new_data + data_len * sizeof(u_int8_t), padding, padding_length);
 
   // add length bits
   // bytes_len concat
-  uint32_t bytes_len = (uint32_t) data_len; //u32 -> 4 bytes
+  u_int32_t bytes_len = (u_int32_t) data_len; //u32 -> 4 bytes
   bytes_len = bytes_len << 3;
   // malloc x_data memory
   // x_data = data || padding_data(0x80,0x00...0x00<length>) || length_bits
-  uint8_t * length_bits = (uint8_t *)calloc(2* sizeof(uint32_t), sizeof(uint8_t)); // 8bytes data
+  u_int8_t * length_bits = (u_int8_t *)calloc(2* sizeof(u_int32_t), sizeof(u_int8_t)); // 8bytes data
   // length_bits: [length:\x00\x00\x00\x00]
-  length_bits[0] = (uint8_t) bytes_len;
-  length_bits[1] = (uint8_t) (bytes_len >> 8);
-  length_bits[2] = (uint8_t) (bytes_len >> 16);
-  length_bits[3] = (uint8_t) (bytes_len >> 24);
+  length_bits[0] = (u_int8_t) bytes_len;
+  length_bits[1] = (u_int8_t) (bytes_len >> 8);
+  length_bits[2] = (u_int8_t) (bytes_len >> 16);
+  length_bits[3] = (u_int8_t) (bytes_len >> 24);
 
-  int xdata_length = padding_length +  data_len + 2 * sizeof(uint32_t) /* 2 * 4 * 8*/;
-  uint8_t* x_data = (uint8_t *) calloc((size_t) xdata_length, sizeof(uint8_t));
+  int xdata_length = padding_length +  data_len + 2 * sizeof(u_int32_t) /* 2 * 4 * 8*/;
+  u_int8_t* x_data = (u_int8_t *) calloc((size_t) xdata_length, sizeof(u_int8_t));
   memcpy(x_data, new_data, data_len + padding_length);
   // concat length bits
-  memcpy(x_data + (data_len + padding_length) * sizeof(uint8_t), length_bits , 2 * sizeof(uint32_t));
+  memcpy(x_data + (data_len + padding_length) * sizeof(u_int8_t), length_bits , 2 * sizeof(u_int32_t));
 //	char* tmpdata = *data;
 //	if (*tmpdata) free(*tmpdata);
   if (new_data) free(new_data);
@@ -255,7 +255,7 @@ int ripemd128PaddingISO7816(uint8_t **data, int data_len) {
 //	printf("\n");
 
   // little endian to big endian
-//	uint32_t testd = x_data[3];
+//	u_int32_t testd = x_data[3];
 //	testd = testd << 8 | x_data[2];
 //
 //  testd = testd << 8 | x_data[1];
@@ -264,7 +264,7 @@ int ripemd128PaddingISO7816(uint8_t **data, int data_len) {
 
   (*data) = x_data;
 
-  return data_len + padding_length + 2 * sizeof(uint32_t);
+  return data_len + padding_length + 2 * sizeof(u_int32_t);
 }
 
 
@@ -344,7 +344,7 @@ byte *ripemd128(const byte *message, int len)
 
 /********************************************************************/
 
-byte* ripemd128bytes(uint8_t *message, int length)
+byte* ripemd128bytes(u_int8_t *message, int length)
 {
 //   int i;
 //   printf("\n* message: %s\n  hashcode: ", message);

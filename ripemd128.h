@@ -130,7 +130,7 @@ void ripemd128compress(dword32 *digest, dword32 *X);
  * ISO7816 message padding
  * return the length after padding, the data will be modified
  */
-int ripemd128PaddingISO7816(uint8_t **data, int data_len);
+int ripemd128PaddingISO7816(u_int8_t **data, int data_len);
 
 /**
  * simple ripemd128 for string method
@@ -138,7 +138,7 @@ int ripemd128PaddingISO7816(uint8_t **data, int data_len);
  * @param length
  */
 
-byte *ripemd128bytes(uint8_t *message, int length);
+byte *ripemd128bytes(u_int8_t *message, int length);
 
 #endif /* RMD128H */
 
